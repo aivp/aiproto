@@ -34,10 +34,10 @@ public class ClassUtils {
     public static List<Class<?>> getClassList(String packageName) {
         List<Class<?>> classList = new LinkedList<>();
         String path = packageName.replace(".", "/");
-        ClassLoader[] loaders = getClassLoaders();
-        for (ClassLoader loader : loaders) {
+        ClassLoader[] classLoaders = getClassLoaders();
+        for (ClassLoader classLoader : classLoaders) {
             try {
-                Enumeration<URL> urls = loader.getResources(path);
+                Enumeration<URL> urls = classLoader.getResources(path);
                 while (urls.hasMoreElements()) {
                     URL url = urls.nextElement();
 
@@ -45,7 +45,7 @@ public class ClassUtils {
                         String protocol = url.getProtocol();
 
                         if ("file".equals(protocol)) {
-                            addClass(classList, url.toURI().getPath(), packageName);
+                            addClass(classList, url.toURI().getPath(), packageName, classLoader);
 
                         } else if ("jar".equals(protocol)) {
                             JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
@@ -60,7 +60,7 @@ public class ClassUtils {
                                 if (entryName.startsWith(path) && entryName.endsWith(".class")) {
                                     String className =
                                         entryName.substring(0, entryName.lastIndexOf(".")).replaceAll("/", ".");
-                                    addClass(classList, className);
+                                    addClass(classList, className, classLoader);
                                 }
                             }
                         }
@@ -73,7 +73,8 @@ public class ClassUtils {
         return classList;
     }
 
-    private static void addClass(List<Class<?>> classList, String packagePath, String packageName) {
+    private static void addClass(List<Class<?>> classList, String packagePath, String packageName,
+        ClassLoader classLoader) {
         try {
             File[] files =
                 new File(packagePath).listFiles(file -> (file.isDirectory() || file.getName().endsWith(".class")));
@@ -85,7 +86,7 @@ public class ClassUtils {
                         if (packageName != null) {
                             className = packageName + "." + className;
                         }
-                        addClass(classList, className);
+                        addClass(classList, className, classLoader);
                     } else {
                         String subPackagePath = fileName;
                         if (packageName != null) {
@@ -95,7 +96,7 @@ public class ClassUtils {
                         if (packageName != null) {
                             subPackageName = packageName + "." + subPackageName;
                         }
-                        addClass(classList, subPackagePath, subPackageName);
+                        addClass(classList, subPackagePath, subPackageName, classLoader);
                     }
                 }
             }
@@ -104,13 +105,13 @@ public class ClassUtils {
         }
     }
 
-    private static void addClass(List<Class<?>> classList, String className) {
-        classList.add(loadClass(className, false));
+    private static void addClass(List<Class<?>> classList, String className, ClassLoader classLoader) {
+        classList.add(loadClass(className, false, classLoader));
     }
 
-    public static Class<?> loadClass(String className, boolean isInitialized) {
+    public static Class<?> loadClass(String className, boolean isInitialized, ClassLoader classLoader) {
         try {
-            return Class.forName(className, isInitialized, contextClassLoader());
+            return Class.forName(className, isInitialized, classLoader);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -126,10 +127,8 @@ public class ClassUtils {
 
     public static ClassLoader[] getClassLoaders() {
         ClassLoader contextClassLoader = contextClassLoader(), staticClassLoader = staticClassLoader();
-        return contextClassLoader != null ?
-            staticClassLoader != null && contextClassLoader != staticClassLoader ?
-                new ClassLoader[]{contextClassLoader, staticClassLoader} :
-                new ClassLoader[]{contextClassLoader} :
+        return contextClassLoader != null ? staticClassLoader != null && contextClassLoader != staticClassLoader ?
+            new ClassLoader[] {contextClassLoader, staticClassLoader} : new ClassLoader[] {contextClassLoader} :
             new ClassLoader[] {};
     }
 }
