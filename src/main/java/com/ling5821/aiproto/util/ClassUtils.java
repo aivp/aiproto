@@ -121,7 +121,7 @@ public class ClassUtils {
     }
 
     public static ClassLoader staticClassLoader() {
-        return DefaultLoadStrategy.class.getClassLoader();
+        return ClassUtils.class.getClassLoader();
     }
 
     public static ClassLoader[] getClassLoaders() {
