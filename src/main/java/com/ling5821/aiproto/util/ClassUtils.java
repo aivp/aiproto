@@ -1,5 +1,7 @@
 package com.ling5821.aiproto.util;
 
+import com.ling5821.aiproto.DefaultLoadStrategy;
+
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.net.JarURLConnection;
@@ -32,38 +34,41 @@ public class ClassUtils {
     public static List<Class<?>> getClassList(String packageName) {
         List<Class<?>> classList = new LinkedList<>();
         String path = packageName.replace(".", "/");
-        try {
-            Enumeration<URL> urls = ClassUtils.getClassLoader().getResources(path);
-            while (urls.hasMoreElements()) {
-                URL url = urls.nextElement();
+        ClassLoader[] loaders = getClassLoaders();
+        for (ClassLoader loader : loaders) {
+            try {
+                Enumeration<URL> urls = loader.getResources(path);
+                while (urls.hasMoreElements()) {
+                    URL url = urls.nextElement();
 
-                if (url != null) {
-                    String protocol = url.getProtocol();
+                    if (url != null) {
+                        String protocol = url.getProtocol();
 
-                    if ("file".equals(protocol)) {
-                        addClass(classList, url.toURI().getPath(), packageName);
+                        if ("file".equals(protocol)) {
+                            addClass(classList, url.toURI().getPath(), packageName);
 
-                    } else if ("jar".equals(protocol)) {
-                        JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
-                        JarFile jarFile = jarURLConnection.getJarFile();
+                        } else if ("jar".equals(protocol)) {
+                            JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
+                            JarFile jarFile = jarURLConnection.getJarFile();
 
-                        Enumeration<JarEntry> jarEntries = jarFile.entries();
-                        while (jarEntries.hasMoreElements()) {
+                            Enumeration<JarEntry> jarEntries = jarFile.entries();
+                            while (jarEntries.hasMoreElements()) {
 
-                            JarEntry jarEntry = jarEntries.nextElement();
-                            String entryName = jarEntry.getName();
+                                JarEntry jarEntry = jarEntries.nextElement();
+                                String entryName = jarEntry.getName();
 
-                            if (entryName.startsWith(path) && entryName.endsWith(".class")) {
-                                String className =
-                                    entryName.substring(0, entryName.lastIndexOf(".")).replaceAll("/", ".");
-                                addClass(classList, className);
+                                if (entryName.startsWith(path) && entryName.endsWith(".class")) {
+                                    String className =
+                                        entryName.substring(0, entryName.lastIndexOf(".")).replaceAll("/", ".");
+                                    addClass(classList, className);
+                                }
                             }
                         }
                     }
                 }
+            } catch (Exception e) {
+                throw new RuntimeException("Initial class error!");
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Initial class error!");
         }
         return classList;
     }
@@ -105,13 +110,26 @@ public class ClassUtils {
 
     public static Class<?> loadClass(String className, boolean isInitialized) {
         try {
-            return Class.forName(className, isInitialized, getClassLoader());
+            return Class.forName(className, isInitialized, contextClassLoader());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static ClassLoader getClassLoader() {
+    public static ClassLoader contextClassLoader() {
         return Thread.currentThread().getContextClassLoader();
+    }
+
+    public static ClassLoader staticClassLoader() {
+        return DefaultLoadStrategy.class.getClassLoader();
+    }
+
+    public static ClassLoader[] getClassLoaders() {
+        ClassLoader contextClassLoader = contextClassLoader(), staticClassLoader = staticClassLoader();
+        return contextClassLoader != null ?
+            staticClassLoader != null && contextClassLoader != staticClassLoader ?
+                new ClassLoader[]{contextClassLoader, staticClassLoader} :
+                new ClassLoader[]{contextClassLoader} :
+            new ClassLoader[] {};
     }
 }
