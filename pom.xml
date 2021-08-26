@@ -25,6 +25,11 @@
     </developers>
 
     <distributionManagement>
+        <repository>
+            <id>njaidong-maven-base</id>
+            <name>njaidong-maven-base</name>
+            <url>https://njaidong-maven.pkg.coding.net/repository/maven/base/</url>
+        </repository>
         <snapshotRepository>
             <id>njaidong-maven-base</id>
             <name>njaidong-maven-base</name>
