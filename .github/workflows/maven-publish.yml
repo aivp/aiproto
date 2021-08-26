@@ -5,10 +5,8 @@ name: aiproto
 
 on:
   push:
-    branches:
-      - *
-    tags:
-      - *
+    branches: [ "*" ]
+    tags: [ "*" ]
 
 jobs:
   build:
