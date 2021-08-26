@@ -44,14 +44,14 @@
 
     <distributionManagement>
         <repository>
-            <id>njaidong-maven-base</id>
-            <name>njaidong-maven-base</name>
-            <url>https://njaidong-maven.pkg.coding.net/repository/maven/base/</url>
+            <id>ossrh</id>
+            <name>maven_nexus_repo</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
-            <id>njaidong-maven-base</id>
-            <name>njaidong-maven-base</name>
-            <url>https://njaidong-maven.pkg.coding.net/repository/maven/base/</url>
+            <id>ossrh</id>
+            <name>Central Repository OSSRH</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
