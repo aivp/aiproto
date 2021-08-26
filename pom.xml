@@ -7,6 +7,9 @@
     <groupId>com.ling5821</groupId>
     <artifactId>aiproto</artifactId>
     <version>0.0.3-SNAPSHOT</version>
+    <name>aiproto</name>
+    <url>https://github.com/linG5821/aiproto.git</url>
+    <description>This is a encoding and decoding library for protocol parsing</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -17,12 +20,27 @@
         <project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
     </properties>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo,manual</distribution>
+        </license>
+    </licenses>
+
     <developers>
         <developer>
             <name>linG</name>
             <email>ling5821@foxmail.com</email>
         </developer>
     </developers>
+
+    <scm>
+        <connection>https://github.com/linG5821/aiproto.git</connection>
+        <developerConnection>https://github.com/linG5821/aiproto.git</developerConnection>
+        <url>https://github.com/linG5821/aiproto</url>
+        <tag>${project.version}</tag>
+    </scm>
 
     <distributionManagement>
         <repository>
@@ -93,6 +111,40 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Prevent gpg from using pinentry programs -->
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
             </plugin>
         </plugins>
     </build>
