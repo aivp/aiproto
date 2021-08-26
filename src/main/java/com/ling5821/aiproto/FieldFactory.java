@@ -71,7 +71,7 @@ public abstract class FieldFactory {
                     fieldSchema = ObjectSchema.getInstance(schema);
                 } else {
                     Convert convert = property.getReadMethod().getAnnotation(Convert.class);
-                    if (fieldProperty.getDeclaredField() != null) {
+                    if (fieldProperty.getDeclaredField() != null && (fieldProperty.getDeclaredField().getAnnotation(Convert.class) != null)) {
                         convert = fieldProperty.getDeclaredField().getAnnotation(Convert.class);
                     }
                     fieldSchema = ConvertSchema.getInstance(convert.converter());
@@ -82,7 +82,7 @@ public abstract class FieldFactory {
                 break;
             case MAP:
                 Convert convert = property.getReadMethod().getAnnotation(Convert.class);
-                if (fieldProperty.getDeclaredField() != null) {
+                if (fieldProperty.getDeclaredField() != null && (fieldProperty.getDeclaredField().getAnnotation(Convert.class) != null)) {
                     convert = fieldProperty.getDeclaredField().getAnnotation(Convert.class);
                 }
                 fieldSchema = ConvertSchema.getInstance(convert.converter());

@@ -1,7 +1,6 @@
 package com.ling5821.aiproto;
 
 import com.ling5821.aiproto.annotation.Field;
-import com.ling5821.aiproto.annotation.Fields;
 import com.ling5821.aiproto.field.BasicField;
 import com.ling5821.aiproto.schema.RuntimeSchema;
 
@@ -130,7 +129,7 @@ public abstract class LoadStrategy {
 
             if (readMethod != null) {
 
-                Field methodField = readMethod.getDeclaredAnnotation(Field.class);
+                /*Field methodField = readMethod.getDeclaredAnnotation(Field.class);
                 Fields methodFields = readMethod.getDeclaredAnnotation(Fields.class);
                 if (methodField != null) {
                     fillField(root, multiVersionFields, fieldProperty, methodField);
@@ -140,17 +139,32 @@ public abstract class LoadStrategy {
                         fillField(root, multiVersionFields, fieldProperty, field);
                     }
                     continue;
+                }*/
+
+                Field[] methodFields = readMethod.getDeclaredAnnotationsByType(Field.class);
+                if (methodFields != null && methodFields.length != 0) {
+                    for (Field field : methodFields) {
+                        fillField(root, multiVersionFields, fieldProperty, field);
+                    }
+                    continue;
                 }
             }
 
             if (declaredField != null) {
 
-                Field propertyField = declaredField.getDeclaredAnnotation(Field.class);
+                /*Field propertyField = declaredField.getDeclaredAnnotation(Field.class);
                 Fields propertyFields = declaredField.getDeclaredAnnotation(Fields.class);
                 if (propertyField != null) {
                     fillField(root, multiVersionFields, fieldProperty, propertyField);
                 } else if (propertyFields != null) {
                     for (Field field : propertyFields.value()) {
+                        fillField(root, multiVersionFields, fieldProperty, field);
+                    }
+                }*/
+
+                Field[] propertyFields = declaredField.getDeclaredAnnotationsByType(Field.class);
+                if (propertyFields != null) {
+                    for (Field field : propertyFields) {
                         fillField(root, multiVersionFields, fieldProperty, field);
                     }
                 }

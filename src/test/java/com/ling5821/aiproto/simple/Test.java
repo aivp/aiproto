@@ -17,12 +17,22 @@ public class Test {
         FieldFactory.EXPLAIN = true;
 
         Map<Integer, Schema<Foo>> multiVersionSchema = SchemaUtils.getSchema(Foo.class);
-        Schema<Foo> schema = multiVersionSchema.get(0);
+        Schema<Foo> schema = multiVersionSchema.get(1);
 
         ByteBuf buffer = Unpooled.buffer(32);
         Foo foo = foo();
         schema.writeTo(buffer, foo);
         String hex = ByteBufUtil.hexDump(buffer);
+        System.out.println(hex);
+
+        foo = schema.readFrom(buffer);
+        System.out.println(foo);
+
+        buffer = Unpooled.buffer(32);
+        schema = SchemaUtils.getSchema("Foo", 1);
+        schema.writeTo(buffer, foo);
+
+        hex = ByteBufUtil.hexDump(buffer);
         System.out.println(hex);
 
         foo = schema.readFrom(buffer);
@@ -42,7 +52,7 @@ public class Test {
         @Field(index = 0, type = DataType.STRING, lengthSize = 1, desc = "名称")
         private String name;
 
-        @Field(index = 1, type = DataType.SHORT, desc = "ID")
+
         private short id;
 
         @Field(index = 3, type = DataType.SHORT_LE, desc = "年龄")
@@ -58,6 +68,7 @@ public class Test {
             this.name = name;
         }
 
+        @Field(index = 1, type = DataType.SHORT, desc = "ID")
         public short getId() {
             return id;
         }

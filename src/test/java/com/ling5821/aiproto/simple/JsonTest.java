@@ -1,8 +1,8 @@
-package com.ling5821.aiproto.multiversion;
+package com.ling5821.aiproto.simple;
 
-import com.ling5821.aiproto.DataType;
+import com.ling5821.aiproto.FieldFactory;
 import com.ling5821.aiproto.Schema;
-import com.ling5821.aiproto.annotation.Field;
+import com.ling5821.aiproto.annotation.JsonMessage;
 import com.ling5821.aiproto.util.SchemaUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
@@ -10,32 +10,41 @@ import io.netty.buffer.Unpooled;
 
 import java.util.Map;
 
-public class Test {
-
+/**
+ * @author aidong
+ * @date 2021/8/26 15:08
+ */
+public class JsonTest {
     public static void main(String[] args) {
-        Map<Integer, Schema<Foo>> multiVersionSchema = SchemaUtils.getSchema(Foo.class);
-        Schema<Foo> schema_v1 = multiVersionSchema.get(1);
-        Schema<Foo> schema_v2 = multiVersionSchema.get(2);
+        FieldFactory.EXPLAIN = true;
+        Map<Integer, Schema<Foo>> multiVersionSchema = SchemaUtils.getJsonSchema(Foo.class);
+        Schema<Foo> schema = multiVersionSchema.get(1);
+        if (schema == null) {
+            System.out.println("schema is null");
+            return;
+        }
 
         ByteBuf buffer = Unpooled.buffer(32);
         Foo foo = foo();
-        schema_v1.writeTo(buffer, foo);
+        schema.writeTo(buffer, foo);
         String hex = ByteBufUtil.hexDump(buffer);
         System.out.println(hex);
 
-        foo = schema_v1.readFrom(buffer);
+        foo = schema.readFrom(buffer);
         System.out.println(foo);
-        System.out.println("=========================version: 0");
+
 
         buffer = Unpooled.buffer(32);
-        schema_v2.writeTo(buffer, foo());
+        schema = SchemaUtils.getJsonSchema(Foo.class, 1);
+        schema.writeTo(buffer, foo);
+
         hex = ByteBufUtil.hexDump(buffer);
         System.out.println(hex);
 
-        foo = schema_v2.readFrom(buffer);
+        foo = schema.readFrom(buffer);
         System.out.println(foo);
-        System.out.println("=========================version: 1");
     }
+
 
     public static Foo foo() {
         Foo foo = new Foo();
@@ -45,16 +54,17 @@ public class Test {
         return foo;
     }
 
+    @JsonMessage(value = {"Foo"}, version = {1})
     public static class Foo {
 
         private String name;
+
         private short id;
+
         private short age;
 
         private long timestamp;
 
-        @Field(index = 0, type = DataType.STRING, lengthSize = 1, desc = "名称")
-        @Field(index = 0, type = DataType.STRING, length = 10, desc = "名称", version = 2)
         public String getName() {
             return name;
         }
@@ -63,8 +73,6 @@ public class Test {
             this.name = name;
         }
 
-        @Field(index = 1, type = DataType.SHORT, desc = "ID")
-        @Field(index = 1, type = DataType.SHORT_LE, desc = "ID", version = 2)
         public short getId() {
             return id;
         }
@@ -73,7 +81,6 @@ public class Test {
             this.id = id;
         }
 
-        @Field(index = 3, type = DataType.SHORT_LE, desc = "年龄", version = 1)
         public short getAge() {
             return age;
         }

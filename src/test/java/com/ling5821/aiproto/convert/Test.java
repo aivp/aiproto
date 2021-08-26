@@ -4,7 +4,6 @@ import com.ling5821.aiproto.DataType;
 import com.ling5821.aiproto.Schema;
 import com.ling5821.aiproto.annotation.Convert;
 import com.ling5821.aiproto.annotation.Field;
-import com.ling5821.aiproto.annotation.Fields;
 import com.ling5821.aiproto.util.SchemaUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
@@ -17,33 +16,32 @@ public class Test {
 
     public static void main(String[] args) {
         Map<Integer, Schema<Foo>> multiVersionSchema = SchemaUtils.getSchema(Foo.class);
-        Schema<Foo> schema_v0 = multiVersionSchema.get(0);
         Schema<Foo> schema_v1 = multiVersionSchema.get(1);
+        Schema<Foo> schema_v2 = multiVersionSchema.get(2);
 
         ByteBuf buffer = Unpooled.buffer(32);
-        schema_v0.writeTo(buffer, foo());
+        schema_v1.writeTo(buffer, foo());
         String hex = ByteBufUtil.hexDump(buffer);
         System.out.println(hex);
 
-        Foo foo = schema_v0.readFrom(buffer);
+        Foo foo = schema_v1.readFrom(buffer);
         System.out.println(foo);
-        System.out.println("=========================version: 0");
+        System.out.println("=========================version: 1");
 
         buffer = Unpooled.buffer(32);
-        schema_v1.writeTo(buffer, foo());
+        schema_v2.writeTo(buffer, foo());
         hex = ByteBufUtil.hexDump(buffer);
         System.out.println(hex);
 
-        foo = schema_v1.readFrom(buffer);
+        foo = schema_v2.readFrom(buffer);
         System.out.println(foo);
-        System.out.println("=========================version: 1");
+        System.out.println("=========================version: 2");
     }
 
     public static Foo foo() {
         Foo foo = new Foo();
         foo.setName("张三");
         foo.setId(128);
-        //        foo.setDateTime(LocalDateTime.of(2020, 7, 7, 19, 23, 59));
         Map<Integer, Object> attrs = new TreeMap<>();
         attrs.put(1, 123);
         attrs.put(2, "李四");
@@ -57,11 +55,10 @@ public class Test {
 
         private String name;
         private int id;
-        //        private LocalDateTime dateTime;
         private Map<Integer, Object> attributes;
 
-        @Fields({@Field(index = 0, type = DataType.STRING, lengthSize = 1, desc = "名称", version = 1),
-            @Field(index = 0, type = DataType.STRING, length = 10, desc = "名称", version = 2)})
+        @Field(index = 0, type = DataType.STRING, lengthSize = 1, desc = "名称", version = 1)
+        @Field(index = 0, type = DataType.STRING, length = 10, desc = "名称", version = 2)
         public String getName() {
             return name;
         }
@@ -70,8 +67,8 @@ public class Test {
             this.name = name;
         }
 
-        @Fields({@Field(index = 1, type = DataType.UNSIGNED_SHORT, desc = "ID", version = 1),
-            @Field(index = 1, type = DataType.INT, desc = "ID", version = 2)})
+        @Field(index = 1, type = DataType.UNSIGNED_SHORT, desc = "ID", version = 1)
+        @Field(index = 1, type = DataType.INT, desc = "ID", version = 2)
         public int getId() {
             return id;
         }
@@ -79,15 +76,6 @@ public class Test {
         public void setId(int id) {
             this.id = id;
         }
-
-        //        @Field(index = 3, type = DataType.STRING, desc = "日期", version = {0, 1})
-        //        public LocalDateTime getDateTime() {
-        //            return dateTime;
-        //        }
-
-        //        public void setDateTime(LocalDateTime dateTime) {
-        //            this.dateTime = dateTime;
-        //        }
 
         @Convert(converter = AttributeConverter.class)
         @Field(index = 3, type = DataType.MAP, desc = "属性", version = {1, 2})
@@ -104,7 +92,6 @@ public class Test {
             final StringBuilder sb = new StringBuilder("Foo{");
             sb.append("name='").append(name).append('\'');
             sb.append(", id=").append(id);
-            //            sb.append(", dateTime=").append(dateTime);
             sb.append(", attributes=").append(attributes);
             sb.append('}');
             return sb.toString();
