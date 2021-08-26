@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.StringJoiner;
 
 /**
- * @author aidong
+ * @author lsj
  * @date 2021/8/26 14:13
  */
 public class JsonSchema<T> implements Schema<T> {
