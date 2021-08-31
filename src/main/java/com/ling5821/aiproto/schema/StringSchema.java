@@ -4,6 +4,7 @@ import com.ling5821.aiproto.Schema;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class StringSchema {
 
         @Override
         public void writeTo(ByteBuf output, int length, String message) {
-            byte[] bytes = message.getBytes();
+            byte[] bytes = message.getBytes(charset);
             if (length > 0) {
                 int srcPos = length - bytes.length;
                 if (srcPos > 0) {
