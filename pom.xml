@@ -83,7 +83,7 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>${protobuf.version}</version>
-            <scope>test</scope>
+            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
 
@@ -91,7 +91,7 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
             <version>${protobuf.version}</version>
-            <scope>test</scope>
+            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
     </dependencies>
