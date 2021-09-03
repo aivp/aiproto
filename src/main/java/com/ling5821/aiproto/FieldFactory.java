@@ -87,6 +87,9 @@ public abstract class FieldFactory {
                 }
                 fieldSchema = ConvertSchema.getInstance(convert.converter());
                 break;
+            case PROTO_BUF:
+                fieldSchema = ProtoBufSchema.getInstance(typeClass);
+                break;
             default:
                 throw new RuntimeException("不支持的类型转换");
         }
