@@ -4,7 +4,6 @@ import com.google.protobuf.*;
 import com.ling5821.aiproto.schema.ProtoBufSchema;
 import com.ling5821.aiproto.util.ClassUtils;
 import com.ling5821.aiproto.util.StrUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class ProtoBufStrategy extends LoadStrategy {
             }
             boolean javaMultipleFiles = fileDescriptor.getOptions().getJavaMultipleFiles();
             String javaPackage = fileDescriptor.getOptions().getJavaPackage();
-            if (StringUtils.isEmpty(javaPackage)) {
+            if (javaPackage == null || javaPackage.length() == 0) {
                 // 如果不包含Java的包直接跳过
                 continue;
             }

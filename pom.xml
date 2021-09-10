@@ -21,7 +21,6 @@
         <netty-all.version>4.1.58.Final</netty-all.version>
         <fastjson.version>1.2.76</fastjson.version>
         <protobuf.version>3.17.3</protobuf.version>
-        <commons-lang.version>2.6</commons-lang.version>
     </properties>
 
     <licenses>
@@ -94,13 +93,6 @@
             <version>${protobuf.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>${commons-lang.version}</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
