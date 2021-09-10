@@ -1,0 +1,15 @@
+syntax = "proto3";
+package dtp;
+
+import "google/protobuf/descriptor.proto";
+
+option java_package = "com.ling5821.aiproto.proto";
+option java_outer_classname = "DTPDescriptorProto";
+
+message MessageOptions {
+  repeated string messageTypeId = 1;
+}
+
+extend google.protobuf.MessageOptions {
+  optional MessageOptions message_options = 1124;
+}

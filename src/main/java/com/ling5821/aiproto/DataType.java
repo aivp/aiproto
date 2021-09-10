@@ -151,10 +151,6 @@ public enum DataType {
      */
     MAP(-1),
 
-    /**
-     * ProtoBuf 3 字段类型
-     */
-    PROTO_BUF(-1),
     ;
     public int length;
 

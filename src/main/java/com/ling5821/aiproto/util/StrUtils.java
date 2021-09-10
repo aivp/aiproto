@@ -107,4 +107,10 @@ public class StrUtils {
         }
         return componentType.isArray();
     }
+
+    public static String upperCaseFirst(String str) {
+        char[] chars = str.toCharArray();
+        chars[0] = Character.toUpperCase(chars[0]);
+        return String.valueOf(chars);
+    }
 }

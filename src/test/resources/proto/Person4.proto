@@ -3,11 +3,9 @@ package test;
 
 import "dtp_descriptor.proto";
 option java_package = "com.ling5821.aiproto.proto";
-option java_outer_classname = "PersonProto";
+option java_outer_classname = "Person4Proto";
 
-message Person {
-  option (dtp.message_options).messageTypeId = "1125";
-  option (dtp.message_options).messageTypeId = "1126";
+message Person4 {
   int32 id = 1;
   string name = 2;
   uint32 age = 3;

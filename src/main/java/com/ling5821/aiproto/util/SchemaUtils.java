@@ -1,5 +1,7 @@
 package com.ling5821.aiproto.util;
 
+import com.google.protobuf.DescriptorProtos;
+import com.google.protobuf.GeneratedMessage;
 import com.ling5821.aiproto.*;
 
 import java.util.Map;
@@ -13,6 +15,8 @@ import java.util.Map;
 public class SchemaUtils {
 
     private static volatile boolean Initial = false;
+    private static volatile boolean InitialJson = false;
+    private static volatile boolean InitialProtoBuf = false;
 
     private static LoadStrategy LOAD_STRATEGY = new DefaultLoadStrategy();
     private static LoadStrategy JSON_STRATEGY = new JsonStrategy();
@@ -25,10 +29,21 @@ public class SchemaUtils {
                     Initial = true;
                     LOAD_STRATEGY = new DefaultLoadStrategy(basePackage);
                     JSON_STRATEGY = new JsonStrategy(basePackage);
-                    PROTO_BUF_STRATEGY = new ProtoBufStrategy(basePackage);
                 }
             }
         }
+    }
+
+    public static void initialProtoBuf(String basePackage, GeneratedMessage.GeneratedExtension<DescriptorProtos.MessageOptions, ?> extension, String messageTypeFieldName) {
+        if (!InitialProtoBuf) {
+            synchronized (SchemaUtils.class) {
+                if (!InitialProtoBuf) {
+                    InitialProtoBuf = true;
+                    PROTO_BUF_STRATEGY = new ProtoBufStrategy(basePackage, extension, messageTypeFieldName);
+                }
+            }
+        }
+
     }
 
     public static Schema getSchema(Object typeId, Integer version) {
