@@ -2,8 +2,8 @@ package com.ling5821.aiproto.multiversion;
 
 import com.ling5821.aiproto.Schema;
 import com.ling5821.aiproto.annotation.JsonMessage;
-import com.ling5821.aiproto.proto.DTPDescriptorProto;
 import com.ling5821.aiproto.proto.PersonProto;
+import com.ling5821.aiproto.proto.TestDescriptorProto;
 import com.ling5821.aiproto.util.SchemaUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
@@ -19,7 +19,7 @@ import java.util.StringJoiner;
  */
 public class ProtoTest {
     public static void main(String[] args) {
-        SchemaUtils.initialProtoBuf("com.ling5821.aiproto.proto", DTPDescriptorProto.messageOptions, "messageTypeId");
+        SchemaUtils.initialProtoBuf("com.ling5821.aiproto.proto", TestDescriptorProto.messageOptions, "messageTypeId");
         Schema<PersonProto.Person> schema_t1 = SchemaUtils.getProtoBufSchema("1125", 1);
         Schema<PersonProto.Person> schema_t2 = SchemaUtils.getProtoBufSchema("1126", 1);
 

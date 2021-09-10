@@ -1,14 +1,14 @@
 syntax = "proto3";
 package test;
 
-import "dtp_descriptor.proto";
+import "test_descriptor.proto";
 option java_multiple_files = true;
 option java_package = "com.ling5821.aiproto.proto";
 option java_outer_classname = "Person2Proto";
 
 message Person2 {
-  option (dtp.message_options).messageTypeId = "1128";
-  option (dtp.message_options).messageTypeId = "1129";
+  option (test.message_options).messageTypeId = "1128";
+  option (test.message_options).messageTypeId = "1129";
   int32 id = 1;
   string name = 2;
   uint32 age = 3;

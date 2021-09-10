@@ -1,7 +1,7 @@
 syntax = "proto3";
 package test;
 
-import "dtp_descriptor.proto";
+import "test_descriptor.proto";
 option java_multiple_files = true;
 option java_package = "com.ling5821.aiproto.proto";
 option java_outer_classname = "Person3Proto";
