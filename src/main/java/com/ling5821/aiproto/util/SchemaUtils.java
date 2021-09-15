@@ -28,6 +28,16 @@ public class SchemaUtils {
                 if (!Initial) {
                     Initial = true;
                     LOAD_STRATEGY = new DefaultLoadStrategy(basePackage);
+                }
+            }
+        }
+    }
+
+    public static void initialJson(String basePackage) {
+        if (!InitialJson) {
+            synchronized (SchemaUtils.class) {
+                if (!InitialJson) {
+                    InitialProtoBuf = true;
                     JSON_STRATEGY = new JsonStrategy(basePackage);
                 }
             }

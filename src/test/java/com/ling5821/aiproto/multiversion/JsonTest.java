@@ -17,7 +17,7 @@ import java.util.StringJoiner;
  */
 public class JsonTest {
     public static void main(String[] args) {
-        SchemaUtils.initial("com.ling5821.aiproto.multiversion");
+        SchemaUtils.initialJson("com.ling5821.aiproto.multiversion");
         Schema<Foo> schema_v1 = SchemaUtils.getJsonSchema("Foo", 1);
         Schema<Foo2> schema_v2 = SchemaUtils.getJsonSchema("Foo", 2);
 
