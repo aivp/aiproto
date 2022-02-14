@@ -2,6 +2,8 @@ syntax = "proto3";
 package test;
 
 import "test_descriptor.proto";
+import "XBai.proto";
+import "XHong.proto";
 option java_package = "com.ling5821.aiproto.proto";
 option java_outer_classname = "PersonProto";
 
@@ -13,4 +15,8 @@ message Person {
   uint32 age = 3;
   string email = 5;
   string address = 6;
+  oneof girlFriend {
+    XHong hong = 7;
+    XBai bai = 8;
+  }
 }

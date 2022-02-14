@@ -1,6 +1,7 @@
 package com.ling5821.aiproto;
 
 import com.google.protobuf.*;
+import com.ling5821.aiproto.constant.VersionConstant;
 import com.ling5821.aiproto.schema.ProtoBufSchema;
 import com.ling5821.aiproto.util.ClassUtils;
 import com.ling5821.aiproto.util.StrUtils;
@@ -16,9 +17,11 @@ import java.util.stream.Collectors;
  * @author lsj
  * @date 2021/8/26 11:47
  */
-public class ProtoBufStrategy extends LoadStrategy {
+public class ProtoBufStrategy implements LoadStrategy {
 
-    private Map<String, Map<Integer, Schema<?>>> typeClassMapping = new HashMap(140);
+    private Map<Object, Map<Integer, Schema<?>>> classSchemaMapping = new HashMap<>(140);
+
+    private Map<Object, Map<Integer, Class<?>>> typeIdClassMapping = new HashMap<>(140);
 
     public ProtoBufStrategy() {
     }
@@ -62,7 +65,8 @@ public class ProtoBufStrategy extends LoadStrategy {
                     try {
                         Class<?> messageClass = Class.forName(className);
                         messageTypeIdList.forEach(messageTypeId -> {
-                            loadSchema(typeClassMapping, messageTypeId.toStringUtf8(), messageClass);
+                            loadSchema(classSchemaMapping, messageTypeId.toStringUtf8(), messageClass);
+                            loadClass(typeIdClassMapping, messageTypeId.toStringUtf8(), messageClass);
                         });
                     } catch (ClassNotFoundException ignored) {
                         //加载失败
@@ -73,24 +77,23 @@ public class ProtoBufStrategy extends LoadStrategy {
     }
 
     @Override
-    protected void loadSchema(Map<String, Map<Integer, Schema<?>>> root, Object typeId, Class<?> typeClass) {
-        Map<Integer, Schema<?>> schemas = typeIdMapping.get(typeId);
+    public void loadSchema(Map<Object, Map<Integer, Schema<?>>> root, Object typeId, Class<?> typeClass) {
+        Map<Integer, Schema<?>> schemas = typeIdSchemaMapping.get(typeId);
         if (schemas == null) {
             schemas = loadSchema(root, typeClass);
-            typeIdMapping.put(typeId, schemas);
+            typeIdSchemaMapping.put(typeId, schemas);
         } else {
             schemas.putAll(loadMessageSchemas(typeClass));
         }
     }
 
     @Override
-    protected Map<Integer, Schema<?>> loadSchema(Map<String, Map<Integer, Schema<?>>> root, Class<?> typeClass) {
+    public Map<Integer, Schema<?>> loadSchema(Map<Object, Map<Integer, Schema<?>>> root, Class<?> typeClass) {
         Map<Integer, Schema<?>> schemas = root.get(typeClass.getName());
         //不支持循环引用
         if (schemas != null) {
             return schemas;
         }
-
 
         schemas = loadMessageSchemas(typeClass);
         root.put(typeClass.getName(), schemas);
@@ -98,37 +101,18 @@ public class ProtoBufStrategy extends LoadStrategy {
     }
 
     @Override
-    public <T> Schema<T> getSchema(Class<T> typeClass, Integer version) {
-        Map<Integer, Schema<?>> schemas = typeClassMapping.get(typeClass.getName());
-        if (schemas == null) {
-            schemas = loadSchema(typeClassMapping, typeClass);
-        }
-        if (schemas == null) {
-            return null;
-        }
-        return (Schema<T>)schemas.get(version);
+    public Map<Object, Map<Integer, Schema<?>>> getClassSchemaMapping() {
+        return classSchemaMapping;
     }
 
     @Override
-    public <T> Map<Integer, Schema<T>> getSchema(Class<T> typeClass) {
-        Map<Integer, Schema<?>> schemas = typeClassMapping.get(typeClass.getName());
-        if (schemas == null) {
-            schemas = loadSchema(typeClassMapping, typeClass);
-        }
-        if (schemas == null) {
-            return null;
-        }
-
-        HashMap<Integer, Schema<T>> result = new HashMap<>(schemas.size());
-        for (Map.Entry<Integer, Schema<?>> entry : schemas.entrySet()) {
-            result.put(entry.getKey(), (Schema<T>)entry.getValue());
-        }
-        return result;
+    public Map<Object, Map<Integer, Class<?>>> getTypeIdClassMapping() {
+        return typeIdClassMapping;
     }
 
     private Map<Integer, Schema<?>> loadMessageSchemas(Class<?> typeClass) {
         Map<Integer, Schema<?>> schemas = new HashMap<>(1);
-        schemas.put(1, new ProtoBufSchema<>(typeClass));
+        schemas.put(VersionConstant.DEFAULT_VERSION, new ProtoBufSchema<>(typeClass));
         return schemas;
     }
 }

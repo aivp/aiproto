@@ -18,6 +18,7 @@ public class JsonTest {
     public static void main(String[] args) {
         FieldFactory.EXPLAIN = true;
         Map<Integer, Schema<Foo>> multiVersionSchema = SchemaUtils.getJsonSchema(Foo.class);
+        SchemaUtils.initialJson("com.ling5821.aiproto.simple");
         Schema<Foo> schema = multiVersionSchema.get(1);
         if (schema == null) {
             System.out.println("schema is null");

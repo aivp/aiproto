@@ -4,6 +4,7 @@ import com.ling5821.aiproto.DataType;
 import com.ling5821.aiproto.FieldFactory;
 import com.ling5821.aiproto.Schema;
 import com.ling5821.aiproto.annotation.Field;
+import com.ling5821.aiproto.annotation.Message;
 import com.ling5821.aiproto.util.SchemaUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
@@ -16,6 +17,7 @@ public class Test {
     public static void main(String[] args) {
         FieldFactory.EXPLAIN = true;
 
+        SchemaUtils.initial("com.ling5821.aiproto.simple");
         Map<Integer, Schema<Foo>> multiVersionSchema = SchemaUtils.getSchema(Foo.class);
         Schema<Foo> schema = multiVersionSchema.get(1);
 
@@ -29,7 +31,7 @@ public class Test {
         System.out.println(foo);
 
         buffer = Unpooled.buffer(32);
-        schema = SchemaUtils.getSchema("Foo", 1);
+        schema = SchemaUtils.getSchema(355, 1);
         schema.writeTo(buffer, foo);
 
         hex = ByteBufUtil.hexDump(buffer);
@@ -47,6 +49,7 @@ public class Test {
         return foo;
     }
 
+    @Message(355)
     public static class Foo {
 
         @Field(index = 0, type = DataType.STRING, lengthSize = 1, desc = "名称")

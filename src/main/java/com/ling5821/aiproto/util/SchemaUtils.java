@@ -60,7 +60,7 @@ public class SchemaUtils {
         return LOAD_STRATEGY.getSchema(typeId, version);
     }
 
-    public static Schema getSchema(Class<?> typeClass, Integer version) {
+    public static <T> Schema<T> getSchema(Class<T> typeClass, Integer version) {
         return LOAD_STRATEGY.getSchema(typeClass, version);
     }
 
@@ -72,12 +72,16 @@ public class SchemaUtils {
         return JSON_STRATEGY.getSchema(typeId, version);
     }
 
-    public static Schema getJsonSchema(Class<?> typeClass, Integer version) {
+    public static <T> Schema<T> getJsonSchema(Class<T> typeClass, Integer version) {
         return JSON_STRATEGY.getSchema(typeClass, version);
     }
 
     public static <T> Map<Integer, Schema<T>> getJsonSchema(Class<T> typeClass) {
         return JSON_STRATEGY.getSchema(typeClass);
+    }
+
+    public static Class getProtoBufClass(Object typeId, Integer version) {
+        return PROTO_BUF_STRATEGY.getClass(typeId, version);
     }
 
     public static Schema getProtoBufSchema(Object typeId, Integer version) {

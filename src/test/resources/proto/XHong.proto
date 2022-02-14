@@ -1,0 +1,11 @@
+syntax = "proto3";
+package test;
+
+option java_package = "com.ling5821.aiproto.proto";
+option java_outer_classname = "XHongProto";
+
+message XHong {
+  int32 id = 1;
+  string weight = 2;
+  uint32 height = 3;
+}

@@ -1,7 +1,6 @@
 package com.ling5821.aiproto.multiversion;
 
 import com.ling5821.aiproto.Schema;
-import com.ling5821.aiproto.annotation.JsonMessage;
 import com.ling5821.aiproto.proto.PersonProto;
 import com.ling5821.aiproto.proto.TestDescriptorProto;
 import com.ling5821.aiproto.util.SchemaUtils;
@@ -9,9 +8,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.StringJoiner;
 
 /**
  * @author lsj
@@ -22,6 +18,7 @@ public class ProtoTest {
         SchemaUtils.initialProtoBuf("com.ling5821.aiproto.proto", TestDescriptorProto.messageOptions, "messageTypeId");
         Schema<PersonProto.Person> schema_t1 = SchemaUtils.getProtoBufSchema("1125", 1);
         Schema<PersonProto.Person> schema_t2 = SchemaUtils.getProtoBufSchema("1126", 1);
+        System.out.println(SchemaUtils.getProtoBufClass("1125", 1));
 
         ByteBuf buffer = Unpooled.buffer(32);
         PersonProto.Person person = PersonProto.Person.newBuilder().setId(1).setAge(15).setName("小白").setEmail("email").build();

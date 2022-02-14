@@ -21,7 +21,7 @@ import java.util.*;
  */
 public abstract class IdStrategy {
 
-    protected Map<Object, Schema> typeIdMapping = new HashMap<>(64);
+    protected Map<Object, Schema> typeIdSchemaMapping = new HashMap<>(64);
 
     protected static <T> Schema<T> loadSchema(Map<Object, Schema> root, Class<T> typeClass) {
         Schema schema = root.get(typeClass.getName());
@@ -132,27 +132,27 @@ public abstract class IdStrategy {
     }
 
     public Object readFrom(Object typeId, ByteBuf input) {
-        Schema schema = typeIdMapping.get(typeId);
+        Schema schema = typeIdSchemaMapping.get(typeId);
         return schema.readFrom(input);
     }
 
     public void writeTo(Object typeId, ByteBuf output, Object element) {
-        Schema schema = typeIdMapping.get(typeId);
+        Schema schema = typeIdSchemaMapping.get(typeId);
         schema.writeTo(output, element);
     }
 
     public Schema getSchema(Object typeId) {
-        Schema schema = typeIdMapping.get(typeId);
+        Schema schema = typeIdSchemaMapping.get(typeId);
         return schema;
     }
 
     public abstract <T> Schema<T> getSchema(Class<T> typeClass);
 
     protected <T> Schema<T> loadSchema(Map<Object, Schema> root, Object typeId, Class<T> typeClass) {
-        Schema<T> schema = typeIdMapping.get(typeId);
+        Schema<T> schema = typeIdSchemaMapping.get(typeId);
         if (schema == null) {
             schema = loadSchema(root, typeClass);
-            typeIdMapping.put(typeId, schema);
+            typeIdSchemaMapping.put(typeId, schema);
         }
         return schema;
     }
