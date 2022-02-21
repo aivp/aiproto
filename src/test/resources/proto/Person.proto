@@ -2,6 +2,7 @@ syntax = "proto3";
 package test;
 
 import "test_descriptor.proto";
+import "google/protobuf/any.proto";
 import "XBai.proto";
 import "XHong.proto";
 option java_package = "com.ling5821.aiproto.proto";
@@ -20,4 +21,5 @@ message Person {
     XBai bai = 8;
     XBai bai_x = 9;
   }
+  map<string, google.protobuf.Any> maps = 10;
 }
