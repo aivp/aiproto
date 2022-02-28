@@ -31,6 +31,11 @@ public enum DataType {
     SHORT_LE(2),
 
     /**
+     * 有符号短整型(2个字节, 小端字节序, 通过 int 接收)
+     */
+    SHORT_INT_LE(2),
+
+    /**
      * 无符号短整型(2个字节, 大端字节序)
      */
     UNSIGNED_SHORT(2),
