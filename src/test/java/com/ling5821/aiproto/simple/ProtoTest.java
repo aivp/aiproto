@@ -1,5 +1,8 @@
 package com.ling5821.aiproto.simple;
 
+import com.google.protobuf.Any;
+import com.google.protobuf.Int32Value;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.ling5821.aiproto.Schema;
 import com.ling5821.aiproto.proto.PersonProto;
 import com.ling5821.aiproto.proto.PersonProto.Person;
@@ -17,7 +20,8 @@ import java.util.Map;
  * @date 2021/8/26 15:08
  */
 public class ProtoTest {
-    public static void main(String[] args) {
+    public static void main(String[] args)
+        throws ClassNotFoundException, InvalidProtocolBufferException {
         Map<Integer, Schema<PersonProto.Person>> multiVersionSchema = SchemaUtils.getProtoBufSchema(PersonProto.Person.class);
         Schema<PersonProto.Person> schema = multiVersionSchema.get(1);
         if (schema == null) {
@@ -42,6 +46,7 @@ public class ProtoTest {
                 .setHeight(15)
                 .build()
             )
+            .putMaps("hello", Any.pack(Int32Value.of(5)))
             .build();
         schema.writeTo(buffer, person);
         System.out.println(ByteBufUtil.hexDump(buffer));
@@ -49,6 +54,13 @@ public class ProtoTest {
         PersonProto.Person personWRead = schema.readFrom(buffer);
         System.out.println(personWRead.getHong());
         System.out.println(personWRead.getBai());
+        System.out.println(personWRead.getMapsMap());
+        Map<String, Any> mapsMap = personWRead.getMapsMap();
+        for (Any any : mapsMap.values()) {
+            String[] split = any.getTypeUrl().split("/");
+            Class anyClass = Class.forName("com." + split[1]);
+            System.out.println(any.unpack(anyClass));
+        }
 
         buffer = Unpooled.buffer(32);
         schema = SchemaUtils.getProtoBufSchema(PersonProto.Person.class, 1);

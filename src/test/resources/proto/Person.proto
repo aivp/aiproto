@@ -2,14 +2,15 @@ syntax = "proto3";
 package test;
 
 import "test_descriptor.proto";
+import "google/protobuf/any.proto";
 import "XBai.proto";
 import "XHong.proto";
 option java_package = "com.ling5821.aiproto.proto";
 option java_outer_classname = "PersonProto";
 
 message Person {
-  option (test.message_options).messageTypeId = "1125";
-  option (test.message_options).messageTypeId = "1126";
+  option (test.message_options).message_type_id = "1125";
+  option (test.message_options).message_type_id = "1126";
   int32 id = 1;
   string name = 2;
   uint32 age = 3;
@@ -18,5 +19,7 @@ message Person {
   oneof girlFriend {
     XHong hong = 7;
     XBai bai = 8;
+    XBai bai_x = 9;
   }
+  map<string, google.protobuf.Any> maps = 10;
 }

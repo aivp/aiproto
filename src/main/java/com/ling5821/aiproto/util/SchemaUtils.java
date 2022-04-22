@@ -37,7 +37,7 @@ public class SchemaUtils {
         if (!InitialJson) {
             synchronized (SchemaUtils.class) {
                 if (!InitialJson) {
-                    InitialProtoBuf = true;
+                    InitialJson = true;
                     JSON_STRATEGY = new JsonStrategy(basePackage);
                 }
             }

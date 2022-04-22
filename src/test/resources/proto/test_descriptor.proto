@@ -7,7 +7,7 @@ option java_package = "com.ling5821.aiproto.proto";
 option java_outer_classname = "TestDescriptorProto";
 
 message MessageOptions {
-  repeated string messageTypeId = 1;
+  repeated string message_type_id = 1;
 }
 
 extend google.protobuf.MessageOptions {

@@ -1,12 +1,17 @@
 package com.ling5821.aiproto.multiversion;
 
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.ProtocolStringList;
 import com.ling5821.aiproto.Schema;
 import com.ling5821.aiproto.proto.PersonProto;
+import com.ling5821.aiproto.proto.PersonProto.Person;
 import com.ling5821.aiproto.proto.TestDescriptorProto;
+import com.ling5821.aiproto.proto.TestDescriptorProto.MessageOptions;
 import com.ling5821.aiproto.util.SchemaUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
+import java.util.List;
 
 
 /**
@@ -25,6 +30,13 @@ public class ProtoTest {
         schema_t1.writeTo(buffer, person);
         String hex = ByteBufUtil.hexDump(buffer);
         System.out.println(hex);
+        List<Descriptor> messageTypes = PersonProto.getDescriptor().getMessageTypes();
+        for (Descriptor messageType : messageTypes) {
+            MessageOptions extension = messageType.getOptions()
+                .getExtension(TestDescriptorProto.messageOptions);
+            ProtocolStringList messageTypeIdList = extension.getMessageTypeIdList();
+            System.out.println(messageTypeIdList);
+        }
 
         person = schema_t1.readFrom(buffer);
         System.out.println(person);
