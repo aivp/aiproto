@@ -36,6 +36,7 @@ public abstract class FieldFactory {
             case UNSIGNED_BYTE_INT:
             case SHORT:
             case SHORT_LE:
+            case SHORT_INT_LE:
             case UNSIGNED_SHORT:
             case UNSIGNED_SHORT_LE:
             case INT:

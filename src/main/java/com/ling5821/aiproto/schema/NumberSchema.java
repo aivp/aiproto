@@ -28,6 +28,9 @@ public class NumberSchema {
             case SHORT_LE:
                 schema = ShortLESchema.INSTANCE;
                 break;
+            case SHORT_INT_LE:
+                schema = ShortIntLESchema.INSTANCE;
+                break;
             case UNSIGNED_SHORT:
                 schema = UnsignedShortSchema.INSTANCE;
                 break;
@@ -152,6 +155,23 @@ public class NumberSchema {
 
         @Override
         public void writeTo(ByteBuf output, Short message) {
+            output.writeShortLE(message);
+        }
+    }
+
+    /**
+     * 有符号短整型模板(小端字节序, 通过 int 接收)
+     */
+    public static class ShortIntLESchema implements Schema<Integer> {
+        public static final Schema<Integer> INSTANCE = new ShortIntLESchema();
+
+        @Override
+        public Integer readFrom(ByteBuf input) {
+            return (int)input.readShortLE();
+        }
+
+        @Override
+        public void writeTo(ByteBuf output, Integer message) {
             output.writeShortLE(message);
         }
     }

@@ -56,6 +56,9 @@ public abstract class PrepareLoadStrategy extends IdStrategy {
             case SHORT_LE:
                 this.typeIdSchemaMapping.put(key, NumberSchema.ShortLESchema.INSTANCE);
                 break;
+            case SHORT_INT_LE:
+                this.typeIdSchemaMapping.put(key, NumberSchema.ShortIntLESchema.INSTANCE);
+                break;
             case UNSIGNED_SHORT:
                 this.typeIdSchemaMapping.put(key, NumberSchema.UnsignedShortSchema.INSTANCE);
                 break;
