@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 
 import java.beans.PropertyDescriptor;
+import java.util.Objects;
 
 /**
  * @author lsj
@@ -25,33 +26,65 @@ public class FixedField<T> extends BasicField<T> {
         Object value = schema.readFrom(input);
 
         try {
-            // 针对字段类型与读取值不一致进行转换
-            if (!fieldType.isInstance(value)) {
-                // 待设置字段类型为数字，当前读取值value也是数字，进行数字之间的转换
-                if (value instanceof Number) {
-                    // 根据预估的类型占比优先级进行优先判断
-                    if (fieldType.equals(Integer.class) || int.class.equals(fieldType)) {
-                        value = ((Number) value).intValue();
-                    } else if (fieldType.equals(Long.class) || long.class.equals(fieldType)) {
-                        value = ((Number) value).longValue();
-                    } else if (fieldType.equals(Double.class) || double.class.equals(fieldType)) {
-                        value = ((Number) value).doubleValue();
-                    } else if (fieldType.equals(Float.class) || float.class.equals(fieldType)) {
-                        value = ((Number) value).floatValue();
-                    } else if (fieldType.equals(Short.class) || short.class.equals(fieldType)) {
-                        value = ((Number) value).shortValue();
-                    } else if (fieldType.equals(Byte.class) || byte.class.equals(fieldType)) {
-                        value = ((Number) value).byteValue();
+            if (value != null) {
+                // 针对字段类型与读取值不一致进行转换
+                if (!fieldType.isInstance(value)) {
+                    // 待设置字段类型为数字，当前读取值value也是数字，进行数字之间的转换
+                    if (value instanceof Number) {
+                        // 根据预估的类型占比优先级进行优先判断
+                        if (Integer.class.equals(fieldType) || int.class.equals(fieldType)) {
+                            value = ((Number) value).intValue();
+                        } else if (Long.class.equals(fieldType) || long.class.equals(fieldType)) {
+                            value = ((Number) value).longValue();
+                        } else if (Double.class.equals(fieldType) || double.class.equals(fieldType)) {
+                            value = ((Number) value).doubleValue();
+                        } else if (Float.class.equals(fieldType) || float.class.equals(fieldType)) {
+                            value = ((Number) value).floatValue();
+                        } else if (Short.class.equals(fieldType) || short.class.equals(fieldType)) {
+                            value = ((Number) value).shortValue();
+                        } else if (Byte.class.equals(fieldType) || byte.class.equals(fieldType)) {
+                            value = ((Number) value).byteValue();
+                        } else {
+                            value = null;
+                        }
+                    } else if (String.class.isAssignableFrom(fieldType)) {
+                        // 其他类型转换为String
+                        value = value.toString();
+                    } else if (Boolean.class.equals(fieldType) || boolean.class.equals(fieldType)) {
+                        // 布尔类型转换
+                        if (value instanceof Number) {
+                            value = Objects.equals(value, 0);
+                        } else if (value instanceof String) {
+                            value = Boolean.parseBoolean((String) value);
+                        }
                     } else {
+                        // 其他无法处理的状况
                         value = null;
                     }
-                } else if (String.class.isAssignableFrom(fieldType)) {
-                    // 其他类型转换为String
-                    value = value.toString();
-                } else {
-                    value = null;
                 }
             }
+
+            // 基础类型设置默认值
+            if (Objects.isNull(value) && fieldType.isPrimitive()) {
+                if (int.class.equals(fieldType)) {
+                    value = 0;
+                } else if (long.class.equals(fieldType)) {
+                    value = 0L;
+                } else if (double.class.equals(fieldType)) {
+                    value = 0d;
+                } else if (float.class.equals(fieldType)) {
+                    value = 0f;
+                } else if (short.class.equals(fieldType)) {
+                    value = (short) 0;
+                } else if (byte.class.equals(fieldType)) {
+                    value = (byte) 0;
+                } else if (boolean.class.equals(fieldType)) {
+                    value = false;
+                } else if (char.class.equals(fieldType)) {
+                    value = ' ';
+                }
+            }
+
         } catch (Exception e) {
             // TODO 转换失败的情况
         }
