@@ -246,7 +246,11 @@ public class NumberSchema {
 
         @Override
         public Integer readFrom(ByteBuf input) {
-            return input.readInt();
+            Integer value = input.readInt();
+            if (Objects.equals(value, 0x7FFFFFFF)) {
+                value = null;
+            }
+            return value;
         }
 
         @Override
@@ -285,7 +289,7 @@ public class NumberSchema {
         @Override
         public Long readFrom(ByteBuf input) {
             Long value = input.readUnsignedInt();
-            if (Objects.equals(value, 0x7FFFFFFFL)) {
+            if (Objects.equals(value, 0xFFFFFFFFL)) {
                 value = null;
             }
             return value;
@@ -306,7 +310,7 @@ public class NumberSchema {
         @Override
         public Long readFrom(ByteBuf input) {
             Long value = input.readUnsignedIntLE();
-            if (Objects.equals(value, 0x7FFFFFFFL)) {
+            if (Objects.equals(value, 0xFFFFFFFFL)) {
                 value = null;
             }
             return value;
