@@ -23,7 +23,41 @@ public class FixedField<T> extends BasicField<T> {
     @Override
     public boolean readFrom(ByteBuf input, Object message) throws Exception {
         Object value = schema.readFrom(input);
+
+        try {
+            // 针对字段类型与读取值不一致进行转换
+            if (!fieldType.isInstance(value)) {
+                // 待设置字段类型为数字，当前读取值value也是数字，进行数字之间的转换
+                if (Number.class.isAssignableFrom(fieldType) && value instanceof Number) {
+                    // 根据预估的类型占比优先级进行优先判断
+                    if (fieldType.equals(Integer.class)) {
+                        value = ((Number) value).intValue();
+                    } else if (fieldType.equals(Long.class)) {
+                        value = ((Number) value).longValue();
+                    } else if (fieldType.equals(Double.class)) {
+                        value = ((Number) value).doubleValue();
+                    } else if (fieldType.equals(Float.class)) {
+                        value = ((Number) value).floatValue();
+                    } else if (fieldType.equals(Short.class)) {
+                        value = ((Number) value).shortValue();
+                    } else if (fieldType.equals(Byte.class)) {
+                        value = ((Number) value).byteValue();
+                    } else {
+                        value = null;
+                    }
+                } else if (String.class.isAssignableFrom(fieldType)) {
+                    // 其他类型转换为String
+                    value = value.toString();
+                } else {
+                    value = null;
+                }
+            }
+        } catch (Exception e) {
+            // TODO 转换失败的情况
+        }
+
         writeMethod.invoke(message, value);
+
         return true;
     }
 
@@ -31,7 +65,7 @@ public class FixedField<T> extends BasicField<T> {
     public void writeTo(ByteBuf output, Object message) throws Exception {
         Object value = readMethod.invoke(message);
         if (value != null) {
-            schema.writeTo(output, (T)value);
+            schema.writeTo(output, (T) value);
         }
     }
 
@@ -60,7 +94,7 @@ public class FixedField<T> extends BasicField<T> {
 
             Object value = readMethod.invoke(message);
             if (value != null) {
-                schema.writeTo(output, (T)value);
+                schema.writeTo(output, (T) value);
             }
 
             int after = output.writerIndex();
