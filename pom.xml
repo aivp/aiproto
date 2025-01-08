@@ -6,7 +6,7 @@
 
     <groupId>com.ling5821</groupId>
     <artifactId>aiproto</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
     <name>aiproto</name>
     <url>https://github.com/linG5821/aiproto.git</url>
     <description>This is a encoding and decoding library for protocol parsing</description>
@@ -38,24 +38,13 @@
         </developer>
     </developers>
 
-    <scm>
-        <connection>https://github.com/linG5821/aiproto.git</connection>
-        <developerConnection>https://github.com/linG5821/aiproto.git</developerConnection>
-        <url>https://github.com/linG5821/aiproto</url>
-        <tag>${project.version}</tag>
-    </scm>
-
     <distributionManagement>
         <repository>
-            <id>ossrh</id>
-            <name>maven_nexus_repo</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <!--必须与 settings.xml 的 id 一致-->
+            <id>njaidong-maven-base</id>
+            <name>base</name>
+            <url>https://njaidong-maven.pkg.coding.net/repository/maven/base/</url>
         </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <name>Central Repository OSSRH</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <dependencies>
@@ -135,28 +124,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Prevent gpg from using pinentry programs -->
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

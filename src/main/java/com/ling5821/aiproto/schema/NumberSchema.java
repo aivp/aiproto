@@ -4,6 +4,8 @@ import com.ling5821.aiproto.DataType;
 import com.ling5821.aiproto.Schema;
 import io.netty.buffer.ByteBuf;
 
+import java.util.Objects;
+
 /**
  * @author lsj
  * @date 2021/1/22 14:59
@@ -83,7 +85,11 @@ public class NumberSchema {
 
         @Override
         public Byte readFrom(ByteBuf input) {
-            return input.readByte();
+            Byte value = input.readByte();
+            if (Objects.equals(value, -128)) {
+                value = null;
+            }
+            return value;
         }
 
         @Override
@@ -100,7 +106,11 @@ public class NumberSchema {
 
         @Override
         public Short readFrom(ByteBuf input) {
-            return input.readUnsignedByte();
+            Short value = input.readUnsignedByte();
+            if (Objects.equals(value, 255)) {
+                value = null;
+            }
+            return value;
         }
 
         @Override
@@ -114,7 +124,7 @@ public class NumberSchema {
 
         @Override
         public Integer readFrom(ByteBuf input) {
-            return (int)input.readUnsignedByte();
+            return (int) input.readUnsignedByte();
         }
 
         @Override
@@ -133,7 +143,11 @@ public class NumberSchema {
 
         @Override
         public Short readFrom(ByteBuf input) {
-            return input.readShort();
+            Short value = input.readShort();
+            if (Objects.equals(value, 0x7FFF)) {
+                value = null;
+            }
+            return value;
         }
 
         @Override
@@ -150,7 +164,11 @@ public class NumberSchema {
 
         @Override
         public Short readFrom(ByteBuf input) {
-            return input.readShortLE();
+            Short value = input.readShortLE();
+            if (Objects.equals(value, 0x7FFF)) {
+                value = null;
+            }
+            return value;
         }
 
         @Override
@@ -167,7 +185,7 @@ public class NumberSchema {
 
         @Override
         public Integer readFrom(ByteBuf input) {
-            return (int)input.readShortLE();
+            return (int) input.readShortLE();
         }
 
         @Override
@@ -184,7 +202,11 @@ public class NumberSchema {
 
         @Override
         public Integer readFrom(ByteBuf input) {
-            return input.readUnsignedShort();
+            Integer value = input.readUnsignedShort();
+            if (Objects.equals(value, 0xFFFF)) {
+                value = null;
+            }
+            return value;
         }
 
         @Override
@@ -201,7 +223,11 @@ public class NumberSchema {
 
         @Override
         public Integer readFrom(ByteBuf input) {
-            return input.readUnsignedShortLE();
+            Integer value = input.readUnsignedShortLE();
+            if (Objects.equals(value, 0xFFFF)) {
+                value = null;
+            }
+            return value;
         }
 
         @Override
@@ -237,7 +263,11 @@ public class NumberSchema {
 
         @Override
         public Integer readFrom(ByteBuf input) {
-            return input.readIntLE();
+            Integer value = input.readIntLE();
+            if (Objects.equals(value, 0x7FFFFFFF)) {
+                value = null;
+            }
+            return value;
         }
 
         @Override
@@ -254,7 +284,11 @@ public class NumberSchema {
 
         @Override
         public Long readFrom(ByteBuf input) {
-            return input.readUnsignedInt();
+            Long value = input.readUnsignedInt();
+            if (Objects.equals(value, 0x7FFFFFFFL)) {
+                value = null;
+            }
+            return value;
         }
 
         @Override
@@ -271,7 +305,11 @@ public class NumberSchema {
 
         @Override
         public Long readFrom(ByteBuf input) {
-            return input.readUnsignedIntLE();
+            Long value = input.readUnsignedIntLE();
+            if (Objects.equals(value, 0x7FFFFFFFL)) {
+                value = null;
+            }
+            return value;
         }
 
         @Override
