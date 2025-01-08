@@ -28,19 +28,19 @@ public class FixedField<T> extends BasicField<T> {
             // 针对字段类型与读取值不一致进行转换
             if (!fieldType.isInstance(value)) {
                 // 待设置字段类型为数字，当前读取值value也是数字，进行数字之间的转换
-                if (Number.class.isAssignableFrom(fieldType) && value instanceof Number) {
+                if (value instanceof Number) {
                     // 根据预估的类型占比优先级进行优先判断
-                    if (fieldType.equals(Integer.class)) {
+                    if (fieldType.equals(Integer.class) || int.class.equals(fieldType)) {
                         value = ((Number) value).intValue();
-                    } else if (fieldType.equals(Long.class)) {
+                    } else if (fieldType.equals(Long.class) || long.class.equals(fieldType)) {
                         value = ((Number) value).longValue();
-                    } else if (fieldType.equals(Double.class)) {
+                    } else if (fieldType.equals(Double.class) || double.class.equals(fieldType)) {
                         value = ((Number) value).doubleValue();
-                    } else if (fieldType.equals(Float.class)) {
+                    } else if (fieldType.equals(Float.class) || float.class.equals(fieldType)) {
                         value = ((Number) value).floatValue();
-                    } else if (fieldType.equals(Short.class)) {
+                    } else if (fieldType.equals(Short.class) || short.class.equals(fieldType)) {
                         value = ((Number) value).shortValue();
-                    } else if (fieldType.equals(Byte.class)) {
+                    } else if (fieldType.equals(Byte.class) || byte.class.equals(fieldType)) {
                         value = ((Number) value).byteValue();
                     } else {
                         value = null;

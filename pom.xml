@@ -6,7 +6,7 @@
 
     <groupId>com.ling5821</groupId>
     <artifactId>aiproto</artifactId>
-    <version>0.0.6.3</version>
+    <version>0.0.6.4</version>
     <name>aiproto</name>
     <url>https://github.com/linG5821/aiproto.git</url>
     <description>This is a encoding and decoding library for protocol parsing</description>
