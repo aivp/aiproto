@@ -31,7 +31,7 @@ public abstract class BasicField<T> implements Comparable<BasicField<T>> {
         this.writeMethod = property.getWriteMethod();
         this.property = property;
         this.field = field;
-        this.fieldType = field.getClass();
+        this.fieldType = property.getPropertyType();
     }
 
     public abstract boolean readFrom(ByteBuf input, Object message) throws Exception;
