@@ -144,7 +144,7 @@ public class NumberSchema {
         @Override
         public Short readFrom(ByteBuf input) {
             Short value = input.readShort();
-            if (Objects.equals(value, 0x7FFF)) {
+            if (Objects.equals(value, (short) 0x7FFF)) {
                 value = null;
             }
             return value;
@@ -165,7 +165,7 @@ public class NumberSchema {
         @Override
         public Short readFrom(ByteBuf input) {
             Short value = input.readShortLE();
-            if (Objects.equals(value, 0x7FFF)) {
+            if (Objects.equals(value, (short) 0x7FFF)) {
                 value = null;
             }
             return value;
